@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GSC Prospects – Console de qualification Meta</title>
+<style>
+:root{--ind:#2b1a6e;--mag:#d4177f;--bg:#f4f3f9;--card:#fff;--tx:#1d1a2e;--mu:#6b6785;--bd:#e2dff0;--ok:#1a9a5c;--wa:#e8890c;--co:#2f7fd1;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#13101f;--card:#1d1930;--tx:#ece9f8;--mu:#a29ec0;--bd:#322c52}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.app{display:flex;min-height:100vh}
+nav{width:220px;background:var(--ind);color:#fff;flex:none;padding:14px 0}
+.logo{display:flex;align-items:center;gap:10px;padding:0 16px 14px;font-weight:700}
+.logo i{width:38px;height:38px;background:var(--mag);display:grid;place-items:center;font-style:normal;font-size:13px;letter-spacing:.5px;border-radius:4px}
+.logo small{display:block;font-weight:400;font-size:10px;opacity:.7}
+nav a{display:block;padding:9px 16px;color:#d9d3f5;cursor:pointer;border-left:3px solid transparent}
+nav a:hover{background:rgba(255,255,255,.08)}nav a.on{background:rgba(255,255,255,.14);color:#fff;border-left-color:var(--mag)}
+main{flex:1;min-width:0;padding:20px;max-width:1100px}
+h1{margin:0 0 4px;font-size:21px;color:var(--ind)}@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) h1{color:#fff}}
+.sub{color:var(--mu);margin:0 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:14px;margin-bottom:14px}
+.k b{font-size:26px;display:block}.k span{color:var(--mu);font-size:12px}
+.sc{overflow-x:auto}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--bd);white-space:nowrap}th{font-size:12px;color:var(--mu)}
+.b{display:inline-block;padding:2px 9px;border-radius:99px;color:#fff;font-size:12px}.chaud{background:#d93a3a}.tiede{background:var(--wa)}.froid{background:var(--co)}.gr{background:var(--mu)}.ok{background:var(--ok)}
+button,.btn{background:var(--mag);color:#fff;border:0;border-radius:6px;padding:8px 14px;cursor:pointer;font:inherit}button.s{background:var(--ind)}button.l{background:transparent;color:var(--mag);border:1px solid var(--mag)}
+input,select,textarea{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:7px;width:100%;max-width:100%}
+label{display:block;font-size:12px;color:var(--mu);margin:8px 0 3px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+pre,textarea.code{background:#14102a;color:#d9d3f5;padding:12px;border-radius:6px;font:12px/1.5 ui-monospace,Menlo,monospace;overflow:auto;white-space:pre;width:100%;min-height:260px}
+.note{border-left:3px solid var(--mag);padding:6px 12px;background:var(--bg);margin:10px 0;font-size:13px}
+@media(max-width:720px){.app{display:block}nav{width:auto;display:flex;overflow-x:auto;padding:6px}.logo{display:none}nav a{white-space:nowrap;border-left:0;border-bottom:3px solid transparent;padding:8px 12px}nav a.on{border-bottom-color:var(--mag)}main{padding:14px}}
+#sv{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);right:10px;z-index:20;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;font-size:12px;display:flex;gap:8px;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.18)}#sv button{padding:4px 10px;font-size:12px}.d{width:9px;height:9px;border-radius:50%;display:inline-block}.d.ok{background:var(--ok)}.d.no{background:#d93a3a}body{padding-bottom:56px}
+</style></head><body>
+<div id="sv"></div><div class="app"><nav id="nav"></nav><main id="m"></main></div>
+<script>
+var KEY="gsc_prospects_v2";var SV={ok:true,t:null},LS="",_t;
+var PN=["Création et formalisation d’entreprise","Systèmes de vente et acquisition client","Community management et marketing de contenu","Création de sites web professionnels","Coaching en leadership et management","Coaching stratégique et croissance","Conseil et accompagnement à la performance des PME","Conseil en transformation digitale","Business Accelerator Premium"];
+var Q1=[
+["Quel est votre projet ?",["Créer mon entreprise maintenant","Je prépare mon projet","Je me renseigne"]],
+["Quand voulez-vous démarrer ?",["Moins de 30 jours","Dans 1 à 3 mois","Pas de date"]],
+["Avez-vous un budget prévu ?",["Oui, disponible","En cours de réunion","Non"]],
+["Avez-vous déjà un statut juridique en tête ?",["Oui, choisi","J’hésite","Non"]],
+["Souhaitez-vous un accompagnement complet ?",["Oui, tout de suite","Peut-être","Non"]]];
+var QG=[["Quel est votre besoin principal ?",["Urgent","À court terme","Information"]],["Quel est votre délai ?",["Moins de 30 jours","1 à 3 mois","Indéfini"]],["Avez-vous un budget ?",["Oui","En préparation","Non"]]];
+function T(t,a,b,c){return[t,[a,b,c]]}
+var QS=[Q1,
+[T("Quel est votre objectif principal ?","Générer des ventes rapidement","Structurer mon acquisition","Je me renseigne"),T("Vendez-vous déjà un produit ou service ?","Oui, avec des clients réguliers","Oui, quelques ventes","Pas encore"),T("Avez-vous un budget publicitaire mensuel ?","Oui, déjà prévu","À définir","Aucun"),T("Quand souhaitez-vous démarrer ?","Moins de 30 jours","Dans 1 à 3 mois","Pas de date"),T("Votre offre est-elle claire et prête à vendre ?","Oui, prête","En cours","Non"),T("Êtes-vous le décideur ?","Oui, décision rapide","Je dois consulter","Je compare seulement")],
+[T("Quel est votre niveau de présence sur les réseaux ?","Active, je veux déléguer","Irrégulière","Aucune"),T("Sur combien de plateformes voulez-vous être présent ?","2 ou plus","1","Je ne sais pas"),T("Quand souhaitez-vous démarrer ?","Moins de 30 jours","Dans 1 à 3 mois","Pas de date"),T("Avez-vous un budget mensuel pour ce service ?","Oui, disponible","À définir","Non")],
+[T("Quel type de site vous faut-il ?","Vitrine, e-commerce ou plateforme","Simple page de présentation","Je ne sais pas"),T("Vos contenus (textes, logo, photos) sont-ils prêts ?","Oui","En partie","Non"),T("Pour quand en avez-vous besoin ?","Moins de 30 jours","Dans 1 à 3 mois","Pas d’échéance"),T("Avez-vous un budget défini ?","Oui","En cours de définition","Non"),T("Avez-vous un nom de domaine ou un hébergement ?","Oui","Je dois m’en occuper","Je ne sais pas")],
+[T("Quel est votre rôle ?","Dirigeant ou manager","Futur manager","Autre"),T("Combien de personnes encadrez-vous ?","Plus de 5","1 à 5","Aucune"),T("Quel est votre défi de leadership ?","Urgent et bloquant","Important","Curiosité"),T("Quand souhaitez-vous commencer ?","Moins de 30 jours","Dans 1 à 3 mois","Pas de date")],
+[T("Depuis quand votre activité existe-t-elle ?","Plus d’un an","Moins d’un an","Pas encore lancée"),T("Votre chiffre d’affaires est-il régulier ?","Oui","Irrégulier","Aucun"),T("Quel est votre blocage principal ?","Croissance bloquée, urgent","Besoin d’une stratégie","Réflexion générale"),T("Quand voulez-vous agir ?","Moins de 30 jours","Dans 1 à 3 mois","Pas de date"),T("Avez-vous un budget d’accompagnement ?","Oui","À définir","Non")],
+[T("Combien de salariés compte votre PME ?","Plus de 5","2 à 5","Moi seul"),T("Quel est votre problème de performance ?","Pertes ou retards urgents","Organisation à améliorer","Rien de précis"),T("Êtes-vous le décideur ?","Oui","Avec un associé","Non"),T("Quand souhaitez-vous intervenir ?","Moins de 30 jours","Dans 1 à 3 mois","Pas de date"),T("Avez-vous un budget de conseil ?","Oui","À définir","Non"),T("Votre équipe est-elle disponible pour la mission ?","Oui","Partiellement","Non")],
+[T("Quelle est la maturité digitale de votre entreprise ?","Outils en place, à optimiser","Quelques outils","Aucune"),T("Quel est votre besoin principal ?","Automatiser et digitaliser","Choisir les bons outils","Information"),T("Combien d’utilisateurs seront concernés ?","Plus de 5","2 à 5","Moi seul"),T("Quand souhaitez-vous démarrer ?","Moins de 30 jours","Dans 1 à 3 mois","Pas de date"),T("Avez-vous un budget d’investissement ?","Oui","À définir","Non"),T("Êtes-vous le décideur ?","Oui","Je dois consulter","Non")],
+[T("Depuis quand votre entreprise est-elle en activité ?","Plus d’un an","Moins d’un an","Pas encore lancée"),T("Quel est votre chiffre d’affaires mensuel ?","Régulier","Irrégulier","Aucun"),T("Quel est votre objectif de croissance ?","Doubler en 12 mois","Croître progressivement","Pas d’objectif"),T("Pouvez-vous consacrer du temps chaque semaine ?","Oui, plusieurs heures","Peu de temps","Non"),T("Quel budget d’investissement prévoyez-vous ?","Disponible maintenant","À réunir","Aucun"),T("Êtes-vous le décideur ?","Oui","Je dois consulter","Non"),T("Quand souhaitez-vous intégrer le programme ?","Moins de 30 jours","Dans 1 à 3 mois","Pas de date")]];
+function def(){var p=PN.map(function(n,i){return{id:i,nom:n,q:JSON.parse(JSON.stringify(QS[i]||QG))}});
+ return{cfg:{pixel:"",dataset:"",waba:"",tel:"",script:"",minPairs:4,hot:70,warm:40,sendWarm:true,sendCold:false,
+ relance:{chaud:"1,24,72",tiede:"24,72,168",froid:"72,336,720"}},proj:p,leads:[],events:[],backups:[],audit:[],users:[{n:"Ablaye NDIAYE",r:"Administrateur"}]}}
+var S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||!S.cfg){S=def();seed()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));SV.ok=true;SV.t=new Date()}catch(e){SV.ok=false}sv()}
+function sv(){var b=document.getElementById("sv");if(!b)return;b.innerHTML=(SV.ok?'<span class="d ok"></span>Enregistré automatiquement'+(SV.t?' à '+SV.t.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}):""):'<span class="d no"></span>Non enregistré : exportez vos données')+' <button onclick="saveNow()">Enregistrer</button><button class="s" onclick="exp()">Exporter</button>'}
+function fl(el){if(el&&typeof el.onchange=="function"&&el.type!="checkbox"&&el.type!="file"&&el.tagName!="SELECT")el.onchange.call(el)}
+function saveNow(){var a=document.activeElement;fl(a);if(a&&a.blur)a.blur();save()}
+document.addEventListener("input",function(e){var el=e.target;clearTimeout(_t);_t=setTimeout(function(){fl(el);save()},500)});
+document.addEventListener("change",function(){save()});
+window.addEventListener("beforeunload",function(){fl(document.activeElement);save()});
+function log(a){S.audit.unshift({t:new Date().toISOString(),a:a});S.audit=S.audit.slice(0,100);save()}
+function seed(){[["Awa Sow","221770000001",0,[0,0,0,0]],["Moussa Fall","221770000002",0,[1,1,2,1,1]],["Fatou Ba","221770000003",0,[2,2,2]],["Ibrahima Diop","221770000004",1,[0,1,0,0]]].forEach(function(x){addLead(x[0],x[1],x[2],x[3],true)})}
+function ev(l){var q=S.proj[l.p].q,pts=0,max=0;l.a.forEach(function(a,i){pts+=2-a;max+=2});var sc=max?Math.round(pts/max*100):0;
+ var lv=sc>=S.cfg.hot?"chaud":sc>=S.cfg.warm?"tiede":"froid";var pairs=l.a.length;
+ var ok=pairs>=S.cfg.minPairs&&(lv=="chaud"||(lv=="tiede"&&S.cfg.sendWarm)||(lv=="froid"&&S.cfg.sendCold));
+ return{sc:sc,lv:lv,pairs:pairs,ok:ok}}
+function addLead(n,t,p,a,quiet){var l={id:"L"+Date.now()+Math.floor(Math.random()*999),n:n,t:t,p:p,a:a,d:new Date().toISOString()};S.leads.unshift(l);var e=ev(l);
+ if(e.ok){S.events.unshift({id:l.id,t:l.d,name:"LeadSubmitted",lead:n,proj:S.proj[p].nom,lv:e.lv,st:"Prêt à envoyer"})}
+ else S.events.unshift({id:l.id,t:l.d,name:"—",lead:n,proj:S.proj[p].nom,lv:e.lv,st:e.pairs<S.cfg.minPairs?"Retenu : "+e.pairs+"/"+S.cfg.minPairs+" paires":"Retenu : prospect froid"});
+ if(!quiet)log("Prospect ajouté : "+n);save()}
+var lab={chaud:"Chaud",tiede:"Tiède",froid:"Froid"};
+function bd(l){return'<span class="b '+l+'">'+lab[l]+'</span>'}
+function fd(s){return new Date(s).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}
+var V={
+dash:function(){var c={chaud:0,tiede:0,froid:0},ready=0,held=0;S.leads.forEach(function(l){var e=ev(l);c[e.lv]++});S.events.forEach(function(e){e.st=="Prêt à envoyer"||e.st=="Envoyé"?ready++:held++});
+ return'<h1>Tableau de bord</h1><p class="sub">Seuls les prospects qualifiés remontent vers Meta.</p><div class="grid"><div class="card k"><b>'+S.leads.length+'</b><span>Prospects</span></div><div class="card k"><b>'+c.chaud+'</b><span>Chauds</span></div><div class="card k"><b>'+c.tiede+'</b><span>Tièdes</span></div><div class="card k"><b>'+c.froid+'</b><span>Froids</span></div><div class="card k"><b>'+ready+'</b><span>Événements prêts pour Meta</span></div><div class="card k"><b>'+held+'</b><span>Événements retenus</span></div></div><div class="note">Règle active : aucun événement n’est transmis tant que le prospect n’a pas répondu à <b>'+S.cfg.minPairs+' questions</b> sur WhatsApp et atteint le niveau requis.</div>'},
+leads:function(){var o=S.proj.map(function(p){return'<option value="'+p.id+'">'+p.nom+'</option>'}).join("");
+ var rows=S.leads.map(function(l){var e=ev(l),h=S.cfg.relance[e.lv].split(",");var nx=new Date(new Date(l.d).getTime()+h[0]*36e5);
+ return'<tr><td>'+l.n+'</td><td>'+l.t+'</td><td>'+S.proj[l.p].nom+'</td><td>'+e.pairs+'/'+S.cfg.minPairs+'</td><td>'+e.sc+'%</td><td>'+bd(e.lv)+'</td><td>'+(e.ok?'<span class="b ok">Meta</span>':'<span class="b gr">Retenu</span>')+'</td><td>Étiquette : '+lab[e.lv]+'</td><td>'+fd(nx)+'</td></tr>'}).join("");
+ return'<h1>Prospects</h1><p class="sub">Qualification chaud / tiède / froid et prochaine relance.</p><div class="card"><b>Simuler une conversation WhatsApp</b><div class="row"><div><label>Nom</label><input id="fn"></div><div><label>Téléphone</label><input id="ft" value="221"></div><div><label>Projet</label><select id="fp" onchange="qf()">'+o+'</select></div></div><div id="qs"></div><p><button onclick="addF()">Ajouter et évaluer</button></p></div><div class="card sc"><table><tr><th>Nom</th><th>Tél.</th><th>Projet</th><th>Paires</th><th>Score</th><th>Niveau</th><th>Meta</th><th>WhatsApp</th><th>1re relance</th></tr>'+rows+'</table></div>'},
+proj:function(){var h='<h1>Projets et questions</h1><p class="sub">Les 9 projets, avec 1 à 5 questions de qualification (réponse 1 = chaud, 2 = tiède, 3 = froid). Les projets comptent 4 à 7 questions selon leur importance : ajoutez ou retirez-en librement.</p>';
+ S.proj.forEach(function(p){h+='<div class="card"><input value="'+p.nom+'" onchange="S.proj['+p.id+'].nom=this.value;save()" style="font-weight:700"><div class="sc">';p.q.forEach(function(q,i){h+='<label>Question '+(i+1)+'</label><input value="'+q[0]+'" onchange="S.proj['+p.id+'].q['+i+'][0]=this.value;save()"><div class="sub" style="margin:2px 0">1) '+q[1][0]+' · 2) '+q[1][1]+' · 3) '+q[1][2]+'</div>'});
+ h+='</div><p><button class="l" onclick="addQ('+p.id+')">+ Question</button> <button class="l" onclick="delQ('+p.id+')">− Dernière</button></p></div>'});return h},
+rules:function(){var c=S.cfg,r=c.relance;return'<h1>Règles et relances</h1><p class="sub">Délais en heures après le dernier message du prospect.</p><div class="card"><div class="row"><div><label>Paires questions-réponses avant envoi à Meta</label><input type="number" min="1" max="10" value="'+c.minPairs+'" onchange="S.cfg.minPairs=+this.value;save()"></div><div><label>Seuil chaud (% du score)</label><input type="number" value="'+c.hot+'" onchange="S.cfg.hot=+this.value;save()"></div><div><label>Seuil tiède (%)</label><input type="number" value="'+c.warm+'" onchange="S.cfg.warm=+this.value;save()"></div></div>'+
+ '<label><input type="checkbox" style="width:auto" '+(c.sendWarm?"checked":"")+' onchange="S.cfg.sendWarm=this.checked;save()"> Envoyer aussi les prospects tièdes (même événement LeadSubmitted)</label><label><input type="checkbox" style="width:auto" '+(c.sendCold?"checked":"")+' onchange="S.cfg.sendCold=this.checked;save()"> Envoyer les prospects froids (déconseillé)</label></div>'+
+ '<div class="card"><b>Calendrier de relance</b><div class="row"><div><label>Chaud (h)</label><input value="'+r.chaud+'" onchange="S.cfg.relance.chaud=this.value;save()"></div><div><label>Tiède (h)</label><input value="'+r.tiede+'" onchange="S.cfg.relance.tiede=this.value;save()"></div><div><label>Froid (h)</label><input value="'+r.froid+'" onchange="S.cfg.relance.froid=this.value;save()"></div></div><div class="note">Par défaut : chaud 1 h, 24 h, 72 h · tiède 24 h, 3 j, 7 j · froid 3 j, 14 j, 30 j. Hors fenêtre de 24 h WhatsApp, la relance exige un modèle de message approuvé.</div></div>'},
+events:function(){var rows=S.events.map(function(e){var l=S.leads.filter(function(x){return x.id==e.id})[0],pl="";if(e.name!="—")pl=JSON.stringify({event_name:e.name,event_time:Math.floor(new Date(e.t)/1e3),action_source:"business_messaging",messaging_channel:"whatsapp",event_id:e.id,user_data:{whatsapp_business_account_id:S.cfg.waba||"WABA_ID",ctwa_clid:"CTWA_CLID"},custom_data:{projet:e.proj,niveau:e.lv}});
+ return'<tr><td>'+fd(e.t)+'</td><td>'+e.lead+'</td><td>'+e.name+'</td><td>'+bd(e.lv)+'</td><td>'+e.st+'</td><td style="font:11px monospace">'+pl.slice(0,70)+(pl?"…":"")+'</td></tr>'}).join("");
+ return'<h1>Événements Meta</h1><p class="sub">Journal d’évaluation : ce qui est envoyé et ce qui est retenu.</p><div class="card sc"><table><tr><th>Date</th><th>Prospect</th><th>Événement</th><th>Niveau</th><th>Statut</th><th>Charge API de conversion</th></tr>'+rows+'</table></div>'},
+integ:function(){var c=S.cfg;return'<h1>Intégrations</h1><p class="sub">Le jeton d’accès Meta ne se saisit jamais ici : il reste dans les propriétés du script (backend).</p><div class="card"><div class="row"><div><label>ID du Pixel / Dataset</label><input value="'+c.dataset+'" onchange="S.cfg.dataset=this.value;save()"></div><div><label>ID WhatsApp Business (WABA)</label><input value="'+c.waba+'" onchange="S.cfg.waba=this.value;save()"></div><div><label>Numéro WhatsApp</label><input value="'+c.tel+'" onchange="S.cfg.tel=this.value;save()"></div><div><label>URL de l’application web (Apps Script)</label><input value="'+c.script+'" onchange="S.cfg.script=this.value;save()"></div></div></div>'+
+ '<div class="card"><b>1. Backend Google Sheets : Code.gs</b><p class="sub">Feuilles requises : Prospects et Evenements. Déployer en application web et déclarer l’URL comme webhook WhatsApp Cloud API. Propriétés du script : VERIF, WABA, DATASET, TOKEN, WA_TOKEN, PHONE_ID, puis exécuter install() une fois. Le script contient vos questions actuelles : copiez-le à nouveau après toute modification.</p><div class="note"><b>Code à placer dans le message prérempli de chaque annonce :</b> '+S.proj.map(function(p){return"#P"+(p.id+1)+" = "+p.nom}).join(" · ")+'</div><p><button onclick="CP=[genGS()];cp(0)">Copier le script</button></p><textarea class="code" readonly onclick="this.select()">'+genGS().replace(/&/g,"&amp;").replace(/</g,"&lt;")+'</textarea></div>'+
+ '<div class="card"><b>2. Site web : suivi interne (rien n’est envoyé à Meta)</b><pre>document.querySelectorAll("a[href*=\'wa.me\']").forEach(function(a){\n a.addEventListener("click",function(){\n  fetch("'+(c.script||"URL_APPS_SCRIPT")+'",{method:"POST",mode:"no-cors",\n   body:JSON.stringify({type:"site",page:location.pathname,\n   utm:location.search,projet:a.dataset.projet})})})});</pre><div class="note">Le Pixel du site se charge sans événement automatique. Les événements Meta partent uniquement du backend, via l’API de conversion, après qualification.</div></div>'},
+sec:function(){return'<h1>Sécurité</h1><p class="sub">Contrôles recommandés pour la plateforme.</p><div class="card sc"><table><tr><th>Utilisateur</th><th>Rôle</th></tr>'+S.users.map(function(u){return'<tr><td>'+u.n+'</td><td>'+u.r+'</td></tr>'}).join("")+'</table><div class="note">Rôles prévus : Administrateur (tout), Gestionnaire (prospects, relances), Lecteur (consultation). L’accès réel se protège par un dépôt GitHub privé, l’authentification Google 2 étapes et le partage restreint de la feuille.</div></div><div class="card"><b>Journal d’activité</b><div class="sc"><table>'+S.audit.slice(0,15).map(function(a){return'<tr><td>'+fd(a.t)+'</td><td>'+a.a+'</td></tr>'}).join("")+'</table></div></div>'},
+bak:function(){var r=S.backups.map(function(b,i){return'<tr><td>'+fd(b.t)+'</td><td>'+b.n+' prospects</td><td><button class="l" onclick="rest('+i+')">Restaurer</button></td></tr>'}).join("");
+ return'<h1>Sauvegardes</h1><p class="sub">Instantané automatique toutes les 5 minutes (10 conservés) et sauvegarde quotidienne de la feuille côté Google.</p><div class="card"><button onclick="snap(1)">Sauvegarder maintenant</button> <button class="s" onclick="exp()">Exporter (JSON)</button> <label>Importer</label><input type="file" accept=".json" onchange="imp(this)"><div class="sc"><table>'+r+'</table></div></div><div class="note">Sauvegarde Google : exécuter une fois la fonction <code>install</code> du script pour copier la feuille chaque jour dans Drive.</div>'}
+};
+var GS=[
+"var P=PropertiesService.getScriptProperties();",
+"function ok(){return ContentService.createTextOutput('ok')}",
+"function doGet(e){return ContentService.createTextOutput(e.parameter['hub.verify_token']===P.getProperty('VERIF')?e.parameter['hub.challenge']:'refus')}",
+"function doPost(e){var d=JSON.parse(e.postData.contents),ss=SpreadsheetApp.getActive();",
+" if(d.type==='site'){ss.getSheetByName('Evenements').appendRow([new Date(),'site',d.page,d.projet,d.utm]);return ok()}",
+" var v=d.entry[0].changes[0].value;if(!v.messages)return ok();",
+" var m=v.messages[0],tel=m.from,sh=ss.getSheetByName('Prospects'),rep=m.text?m.text.body.trim():(m.interactive?m.interactive.button_reply.id:'');",
+" var r=sh.getDataRange().getValues().findIndex(function(x){return x[0]==tel});",
+" if(r<0){sh.appendRow([tel,m.referral?m.referral.headline:'',0,0,'',m.referral?m.referral.ctwa_clid:'',false,new Date()]);r=sh.getLastRow()-1}",
+" var row=sh.getRange(r+1,1,1,8),x=row.getValues()[0];",
+" if(/^[123]$/.test(rep)){x[2]+=1;x[3]+=3-Number(rep)}",
+" var p=x[2]?x[3]/(x[2]*2)*100:0;x[4]=p>=70?'chaud':p>=40?'tiede':'froid';x[7]=new Date();",
+" if(x[2]>=4&&!x[6]&&x[4]!=='froid'){x[6]=capi(x,v.metadata.phone_number_id)}",
+" row.setValues([x]);return ok()}",
+"function capi(x,w){var t=Math.floor(Date.now()/1000);",
+" var b={data:[{event_name:x[4]==='chaud'?'LeadChaud':'Lead',event_time:t,action_source:'business_messaging',messaging_channel:'whatsapp',event_id:x[0]+'_'+t,",
+" user_data:{whatsapp_business_account_id:P.getProperty('WABA'),ctwa_clid:x[5]},custom_data:{projet:x[1],niveau:x[4]}}]};",
+" var u='https://graph.facebook.com/v21.0/'+P.getProperty('DATASET')+'/events?access_token='+P.getProperty('TOKEN');",
+" return UrlFetchApp.fetch(u,{method:'post',contentType:'application/json',payload:JSON.stringify(b),muteHttpExceptions:true}).getResponseCode()===200}",
+"function backup(){DriveApp.getFileById(SpreadsheetApp.getActive().getId()).makeCopy('Sauvegarde '+new Date().toISOString().slice(0,10))}",
+"function relances(){var sh=SpreadsheetApp.getActive().getSheetByName('Prospects'),D={chaud:1,tiede:24,froid:72};",
+" sh.getDataRange().getValues().forEach(function(x,i){if(i&&x[4]&&(Date.now()-new Date(x[7]))/36e5>=D[x[4]])sh.getRange(i+1,9).setValue('Relance due')})}"
+].join("\n");
+var mp=0,CP=[];
+var RL={chaud:["Bonjour {n}, merci pour vos réponses sur {p}. Votre situation est prioritaire : je peux vous appeler aujourd’hui pour fixer la suite. Quel créneau vous convient ?","Bonjour {n}, je reviens vers vous au sujet de {p}. Il me reste quelques créneaux cette semaine pour un entretien gratuit. Souhaitez-vous en réserver un ?","Bonjour {n}, dernier message de ma part sur {p}. Si le moment n’est pas le bon, dites-le-moi et je reviendrai plus tard. Sinon, répondez OUI et nous planifions l’appel."],
+tiede:["Bonjour {n}, comme convenu, voici le récapitulatif de notre accompagnement sur {p}. Avez-vous des questions ?","Bonjour {n}, voici un exemple concret de ce que nous faisons sur {p}. Souhaitez-vous que je l’adapte à votre situation ?","Bonjour {n}, où en êtes-vous dans votre réflexion sur {p} ? Je peux répondre à vos dernières questions."],
+froid:["Bonjour {n}, merci de votre intérêt pour {p}. Je vous partage une ressource gratuite pour avancer à votre rythme.","Bonjour {n}, voici un conseil pratique pour avancer sur {p}. Votre projet a-t-il évolué ?","Bonjour {n}, votre projet {p} a-t-il évolué depuis notre échange ? Je reste disponible dès que vous êtes prêt."]};
+var CL={chaud:"Merci {n} ! D’après vos réponses, votre projet {p} est prioritaire. Je vous propose un appel gratuit : quel jour et quelle heure vous conviennent ?",tiede:"Merci {n} ! Vos réponses m’aident à comprendre votre besoin sur {p}. Je vous envoie une présentation détaillée, puis nous pourrons fixer un échange.",froid:"Merci {n} ! Pour {p}, je vous conseille de commencer par nos ressources gratuites. Revenez vers moi dès que votre projet avance."};
+function genGS(){var c=S.cfg,D={};["chaud","tiede","froid"].forEach(function(k){D[k]=c.relance[k].split(",").map(Number)});
+var PR=S.proj.map(function(p){return{n:p.nom,q:p.q}});
+return[
+"// GSC Prospects, généré le "+new Date().toLocaleDateString('fr-FR'),
+"// Colonnes Prospects : tel, projet, paires, score, niveau, ctwa, envoye_meta, dernier_msg, relance, etape, nb_relances, nom",
+"// Propriétés du script : VERIF, WABA, DATASET, TOKEN, WA_TOKEN, PHONE_ID",
+"var P=PropertiesService.getScriptProperties(),NL=String.fromCharCode(10);",
+"var PR="+JSON.stringify(PR)+";",
+"var RL="+JSON.stringify(RL)+",CL="+JSON.stringify(CL)+";",
+"var CF={min:"+c.minPairs+",hot:"+c.hot+",warm:"+c.warm+",sw:"+!!c.sendWarm+",sc:"+!!c.sendCold+",d:"+JSON.stringify(D)+"};",
+"function ok(){return ContentService.createTextOutput('ok')}",
+"function doGet(e){return ContentService.createTextOutput(e.parameter['hub.verify_token']===P.getProperty('VERIF')?e.parameter['hub.challenge']:'refus')}",
+"function send(to,pid,pl){UrlFetchApp.fetch('https://graph.facebook.com/v21.0/'+pid+'/messages',{method:'post',contentType:'application/json',headers:{Authorization:'Bearer '+P.getProperty('WA_TOKEN')},payload:JSON.stringify(Object.assign({messaging_product:'whatsapp',to:to},pl)),muteHttpExceptions:true})}",
+"function txt(to,pid,t){send(to,pid,{type:'text',text:{body:t}})}",
+"function fill(t,x){return t.split('{n}').join(x[11]||'').split('{p}').join('« '+PR[x[1]].n+' »')}",
+"function qm(x){var p=PR[x[1]],i=x[9]-1,q=p.q[i];return 'Question '+(i+1)+'/'+p.q.length+' : '+q[0]+NL+'1️⃣ '+q[1][0]+NL+'2️⃣ '+q[1][1]+NL+'3️⃣ '+q[1][2]+NL+'Répondez par 1, 2 ou 3.'}",
+"function lv(x){var p=x[2]?x[3]/(x[2]*2)*100:0;x[4]=p>=CF.hot?'chaud':p>=CF.warm?'tiede':'froid'}",
+"function doPost(e){var d=JSON.parse(e.postData.contents),ss=SpreadsheetApp.getActive();",
+" if(d.type==='site'){ss.getSheetByName('Evenements').appendRow([new Date(),'site',d.page,d.projet,d.utm]);return ok()}",
+" var v=d.entry[0].changes[0].value;if(!v.messages)return ok();",
+" var m=v.messages[0],tel=m.from,pid=v.metadata.phone_number_id,sh=ss.getSheetByName('Prospects'),x;",
+" var rep=m.text?m.text.body.trim():(m.interactive?m.interactive.button_reply.id:'');",
+" var r=sh.getDataRange().getValues().findIndex(function(y){return y[0]==tel});",
+" if(r<0){var c=/#P([1-9])/.exec(rep),pi=c?Math.min(+c[1],PR.length)-1:0;",
+"  x=[tel,pi,0,0,'',m.referral?m.referral.ctwa_clid:'',false,new Date(),'',1,0,v.contacts?v.contacts[0].profile.name:''];",
+"  sh.appendRow(x);",
+"  txt(tel,pid,fill('Bonjour {n} 👋 Merci de contacter GSC Business Center au sujet de {p}. J’ai '+PR[pi].q.length+' questions rapides (moins de 2 minutes). Répondez simplement par 1, 2 ou 3.',x));",
+"  txt(tel,pid,qm(x));return ok()}",
+" var row=sh.getRange(r+1,1,1,12);x=row.getValues()[0];x[7]=new Date();x[10]=0;x[8]='';",
+" var n=PR[x[1]].q.length;",
+" if(x[9]>=1&&x[9]<=n){",
+"  if(/^[123]$/.test(rep)){x[2]+=1;x[3]+=3-Number(rep);x[9]+=1;lv(x);",
+"   if(x[9]<=n)txt(tel,pid,qm(x));else txt(tel,pid,fill(CL[x[4]],x))}",
+"  else txt(tel,pid,'Merci de répondre par 1, 2 ou 3.'+NL+qm(x))}",
+" if(x[2]>=CF.min&&!x[6]&&x[5]&&(x[4]=='chaud'||(x[4]=='tiede'&&CF.sw)||(x[4]=='froid'&&CF.sc)))x[6]=capi(x);",
+" row.setValues([x]);return ok()}",
+"function capi(x){var t=Math.floor(Date.now()/1000),b={data:[{event_name:'LeadSubmitted',event_time:t,action_source:'business_messaging',messaging_channel:'whatsapp',event_id:x[0]+'_'+t,user_data:{whatsapp_business_account_id:P.getProperty('WABA'),ctwa_clid:x[5]},custom_data:{projet:PR[x[1]].n,niveau:x[4]}}]};",
+" return UrlFetchApp.fetch('https://graph.facebook.com/v21.0/'+P.getProperty('DATASET')+'/events?access_token='+P.getProperty('TOKEN'),{method:'post',contentType:'application/json',payload:JSON.stringify(b),muteHttpExceptions:true}).getResponseCode()==200}",
+"function relances(){var sh=SpreadsheetApp.getActive().getSheetByName('Prospects'),pid=P.getProperty('PHONE_ID');",
+" sh.getDataRange().getValues().forEach(function(x,i){if(!i||!x[4]||x[9]<=PR[x[1]].q.length||x[10]>=3)return;",
+"  var h=(Date.now()-new Date(x[7]))/36e5,k=x[10];if(h<CF.d[x[4]][k])return;",
+"  if(h<24)txt(x[0],pid,fill(RL[x[4]][k],x));",
+"  else send(x[0],pid,{type:'template',template:{name:'gsc_relance_'+x[4]+'_'+(k+1),language:{code:'fr'},components:[{type:'body',parameters:[x[11]||'client',PR[x[1]].n].map(function(t){return{type:'text',text:t}})}]}});",
+"  sh.getRange(i+1,9).setValue('Relance '+(k+1)+' envoyée');sh.getRange(i+1,11).setValue(k+1)})}",
+"function backup(){DriveApp.getFileById(SpreadsheetApp.getActive().getId()).makeCopy('Sauvegarde '+new Date().toISOString().slice(0,10))}",
+"function install(){ScriptApp.newTrigger('relances').timeBased().everyHours(1).create();ScriptApp.newTrigger('backup').timeBased().everyDays(1).create()}"
+].join("\n")}
+function cp(i){try{navigator.clipboard.writeText(CP[i])}catch(e){}var b=event.target;b.textContent="Copié ✓";setTimeout(function(){b.textContent="Copier"},1500)}
+function box(t,tt){CP.push(tt);return'<div class="card"><b>'+t+'</b><pre style="white-space:pre-wrap;font-family:inherit;background:var(--bg);color:var(--tx);margin:8px 0">'+tt+'</pre><button class="l" onclick="cp('+(CP.length-1)+')">Copier</button></div>'}
+V.msgs=function(){CP=[];var p=S.proj[mp],n="[Prénom]",k=p.q.length,pn="« "+p.nom+" »";
+function f(t){return t.replace(/\{n\}/g,n).replace(/\{p\}/g,pn)}
+function dl(h){h=+h;return h>=24?(h/24)+" j":h+" h"}
+var o=S.proj.map(function(x){return'<option value="'+x.id+'"'+(x.id==mp?" selected":"")+'>'+x.nom+'</option>'}).join("");
+var h='<h1>Messages WhatsApp</h1><p class="sub">Textes envoyés automatiquement par le script (accueil, questions, clôture, relances de moins de 24 h). Au-delà, créez 9 modèles Meta nommés gsc_relance_niveau_numéro (ex. gsc_relance_chaud_2), avec {{1}} pour le prénom et {{2}} pour le projet.</p><div class="card"><label>Projet</label><select onchange="mp=+this.value;go(\'msgs\')">'+o+'</select></div>';
+h+='<h2>Conversation de qualification</h2>'+box("1. Message d’accueil","Bonjour "+n+" 👋\nMerci de contacter GSC Business Center au sujet de "+pn+".\nPour vous orienter vers la bonne solution, j’ai "+k+" questions rapides (moins de 2 minutes). Répondez simplement par 1, 2 ou 3.\nOn commence ?");
+p.q.forEach(function(q,i){h+=box("Question "+(i+1)+"/"+k,"Question "+(i+1)+"/"+k+" : "+q[0]+"\n1️⃣ "+q[1][0]+"\n2️⃣ "+q[1][1]+"\n3️⃣ "+q[1][2]+"\nRépondez par 1, 2 ou 3.")});
+["chaud","tiede","froid"].forEach(function(l){h+='<h2>'+bd(l)+' Prospect '+lab[l].toLowerCase()+'</h2><div class="note">Étiquette WhatsApp à appliquer : <b>'+lab[l]+'</b></div>'+box("Message de clôture",f(CL[l]));
+S.cfg.relance[l].split(",").forEach(function(d,i){var t="Relance "+(i+1)+" : après "+dl(d.trim());if(+d>=24)t+=" (hors fenêtre de 24 h : modèle approuvé requis)";h+=box(t,f(RL[l][i]||RL[l][2]))})});return h};
+function qf(){var p=S.proj[document.getElementById("fp").value],h="";p.q.forEach(function(q,i){h+='<label>Q'+(i+1)+' : '+q[0]+'</label><select class="qa"><option value="">Pas de réponse</option>'+q[1].map(function(o,j){return'<option value="'+j+'">'+o+'</option>'}).join("")+'</select>'});document.getElementById("qs").innerHTML=h}
+function addF(){var n=document.getElementById("fn").value.trim();if(!n)return;var a=[];document.querySelectorAll(".qa").forEach(function(s){if(s.value!==""&&a.length==[].indexOf.call(document.querySelectorAll(".qa"),s))a.push(+s.value)});addLead(n,document.getElementById("ft").value,+document.getElementById("fp").value,a);go("leads")}
+function addQ(i){if(S.proj[i].q.length<8)S.proj[i].q.push(["Nouvelle question ?",["Oui, urgent","Peut-être","Non"]]);save();go("proj")}
+function delQ(i){if(S.proj[i].q.length>1)S.proj[i].q.pop();save();go("proj")}
+function snap(m){S.backups.unshift({t:new Date().toISOString(),n:S.leads.length,d:JSON.stringify({cfg:S.cfg,proj:S.proj,leads:S.leads,events:S.events})});S.backups=S.backups.slice(0,10);if(m)log("Sauvegarde manuelle");save();if(m)go("bak")}
+function rest(i){var d=JSON.parse(S.backups[i].d);S.cfg=d.cfg;S.proj=d.proj;S.leads=d.leads;S.events=d.events;log("Restauration");save();go("bak")}
+function exp(){var a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(S));a.download="gsc-sauvegarde.json";a.click()}
+function imp(f){var r=new FileReader();r.onload=function(){try{S=JSON.parse(r.result);save();go("bak")}catch(e){alert("Fichier invalide")}};r.readAsText(f.files[0])}
+var NV=[["dash","Tableau de bord"],["leads","Prospects"],["proj","Projets et questions"],["rules","Règles et relances"],["msgs","Messages WhatsApp"],["events","Événements Meta"],["integ","Intégrations"],["sec","Sécurité"],["bak","Sauvegardes"]];
+function go(k){location.hash=k;document.getElementById("nav").innerHTML='<div class="logo"><i>GSC</i><div>GSC Business Center<small>Console prospects</small></div></div>'+NV.map(function(n){return'<a class="'+(n[0]==k?"on":"")+'" onclick="go(\''+n[0]+'\')">'+n[1]+'</a>'}).join("");document.getElementById("m").innerHTML=V[k]();if(k=="leads")qf();scrollTo(0,0)}
+go(V[location.hash.slice(1)]?location.hash.slice(1):"dash");
+setInterval(function(){var d=JSON.stringify({cfg:S.cfg,proj:S.proj,leads:S.leads,events:S.events});if(d!=LS){LS=d;snap(0)}},300000);
+save();try{navigator.storage.persist()}catch(e){}
+</script></body></html>
